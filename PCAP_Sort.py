@@ -8,12 +8,15 @@ from tkinter import *
 import os
 import re
 import operator
+import pandas as pd
 
+# Import CSV File #
+file = fd.askopenfile(mode='r',title='Open CSV File to sort')
 
-# Import and Read PCAP File #
-file = fd.askopenfile(mode='r',title='Open PCAP File to sort')
-# open(file) uncomment to test 
-
-reader = csv.reader(open(file), delimiter=";")
-
-sortlist = sorted(reader, key=lambda row: row(3), reverse=True) --> sortedfile.csv
+# Read column names and data
+# Importing columns labeled as: (2)Source, (3)Destination, (4)Protocol, (8)Src. Port 1
+# Source, Destination, and Protocol are default Wireshark columns
+# Src. Port 1 are custom columns that is in slot 8
+ppsm = pd.read_csv(file, usecols=[2, 3, 4, 8])
+ppsm.drop_duplicates()
+ppsm.to_csv("PPSM.csv")
