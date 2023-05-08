@@ -4,9 +4,7 @@ All should be built in modules except pandas, openpyxl, and pyshark.
 Converts PCAP to CSV, sorts out all but Source IP, Destination IP, Source Port, Destination Port, 
 and Protocol. Once done, it then removes all duplicate rows.
 
-Windows Users:
-
-Install Pip:
+Windows UsersI nstall Pip:
 1. Run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 2. Run: python get-pip.py
 
