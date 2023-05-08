@@ -14,6 +14,7 @@ import shutil
 pcap_path = filedialog.askopenfilename()
 
 # Create a copy of the template and establish our var
+print("Preparing PPSM sheet")
 shutil.copy('PPSM Template.xlsx', 'PPSM.xlsx')
 ppsm = 'PPSM.xlsx'
 
@@ -22,6 +23,7 @@ packets = (packet for packet in pyshark.FileCapture(pcap_path)
            if 'IP' in packet and packet.transport_layer)
 
 # Write the desired fields to a CSV file using a DictWriter object
+print("Reading PCAP file out to csv")
 csv_path = 'output.csv'
 with open(csv_path, 'w', newline='') as csvfile:
     fieldnames = ['Source IP', 'Destination IP', 'Protocol', 'Source Port', 'Destination Port']
@@ -39,6 +41,7 @@ with open(csv_path, 'w', newline='') as csvfile:
 
 # Read column names and data
 # Remove duplicates
+print("Removing moving data from CSV to PPSM")
 csv_sorted = pd.read_csv(csv_path, usecols=['Source IP', 'Destination IP', 'Protocol', 'Source Port', 'Destination Port'])
 csv_sorted.drop_duplicates(subset=None, keep="first", inplace=True)
 csv_sorted.to_csv(csv_path, index=False)
