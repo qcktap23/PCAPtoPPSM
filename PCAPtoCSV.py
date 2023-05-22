@@ -125,14 +125,6 @@ x = log_dir + csv_path
 pcap_path = filedialog.askopenfilename()
 logger.info("opened file: " + pcap_path)
 
-# Check file extension on user selection
-file_type = magic.from_file(pcap_path)
-if "tcpdump" not in file_type and "pcap-ng" not in file_type:
-    logger.error("User selected file type is invalid.")
-    logger.debug(file_type)
-    messagebox.showerror("Invalid File type", "Invalid file type selected. Only PCAP and PCAPNG files.")
-    sys.exit()
-
 # Check if handling files exists
 csv_exists = check_path(csv_path)
 excel_template_exists = check_path(ppsm_template)
@@ -159,6 +151,14 @@ if not current_dir_write_perm or not current_dir_ex_perm:
 if not pcap_path:
     logger.warning("No file selected, exiting.")
     messagebox.showwarning("Exiting", "No file selected, exiting.")
+    sys.exit()
+
+# Check file extension on user selection
+file_type = magic.from_file(pcap_path)
+if "tcpdump" not in file_type and "pcap-ng" not in file_type:
+    logger.error("User selected file type is invalid.")
+    logger.debug(file_type)
+    messagebox.showerror("Invalid File type", "Invalid file type selected. Only PCAP and PCAPNG files.")
     sys.exit()
 
 # gives user selection to overwrite ppsm file if it already exists, if not it copies template
