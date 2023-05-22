@@ -117,7 +117,7 @@ ppsm_output = 'PPSM.xlsx'
 ppsm_template = 'PPSM Template.xlsx'
 root = tk.Tk()
 root.withdraw()
-x = log_dir + csv_path
+# x = log_dir + csv_path
 
 # Prompt user for file path
 pcap_path = filedialog.askopenfilename()
@@ -198,7 +198,6 @@ if csv_exists:
         logger.warning("exiting program.")
         messagebox.showwarning("Exiting", "File overwrite cancelled, exiting program.")
         sys.exit()
-
 # ======================================================================================================================
 # ====================================================== CORE CODE =====================================================
 start_time = time.time()
