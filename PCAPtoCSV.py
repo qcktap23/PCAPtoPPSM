@@ -67,7 +67,7 @@ logger.debug("Ran at: " + str(current_time))
 
 # ======================================================================================================================
 # ===================================================== FUNCTIONS ======================================================
-def check_path(path):
+def check_path(path):  # Check if path exists return bool and log
     if os.path.exists(path):
         return True
     else:
@@ -75,7 +75,7 @@ def check_path(path):
         return False
 
 
-def bool_box(title, message):
+def bool_box(title, message):  # present yes or no prompt
     res = messagebox.askquestion(title, message)
     if res == "yes":
         return True
@@ -119,7 +119,7 @@ root = tk.Tk()
 root.withdraw()
 # x = log_dir + csv_path
 
-# Prompt user for file path
+# Prompt user for file path for PCAP
 pcap_path = filedialog.askopenfilename()
 logger.info("opened file: " + pcap_path)
 
