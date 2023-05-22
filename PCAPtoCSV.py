@@ -11,7 +11,6 @@ import openpyxl
 import shutil
 import time
 import sys
-import magic
 import scapy.error
 from scapy.all import IP
 from datetime import datetime
@@ -153,10 +152,10 @@ if not pcap_path:
     sys.exit()
 
 # Check file extension on user selection
-file_type = magic.from_file(pcap_path)
-if "tcpdump" not in file_type and "pcap-ng" not in file_type:
+file_extension = os.path.splitext(pcap_path)[1].lower()
+if file_extension not in ['.pcap', '.pcapng']:
     logger.error("User selected file type is invalid.")
-    logger.debug(file_type)
+    logger.debug(file_extension)
     messagebox.showerror("Invalid File type", "Invalid file type selected. Only PCAP and PCAPNG files.")
     sys.exit()
 
