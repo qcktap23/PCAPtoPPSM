@@ -16,7 +16,6 @@ import scapy.error
 from scapy.all import IP
 from datetime import datetime
 import logging.config
-from configparser import ConfigParser
 from scapy.utils import PcapReader
 from tqdm import tqdm
 # ======================================================================================================================
@@ -28,7 +27,7 @@ if not os.path.exists('config.ini'):
     sys.exit()
 
 # Read log directory from .ini and if directory structure doesn't, exist create it.
-config = ConfigParser()
+config = configparser.ConfigParser()
 config.read("config.ini")
 
 try:
@@ -256,18 +255,22 @@ with open(csv_path, 'w', newline='') as csvfile:
 logger.info("Writing data to PPSM: " + ppsm_output)
 cols_to_include = ['Source IP', 'Protocol', 'Source Port', 'Destination IP']
 writer = pd.ExcelWriter(ppsm_output, engine='openpyxl', mode='a', if_sheet_exists='overlay')
-for df_chunk in pd.read_csv(csv_path, usecols=cols_to_include, chunksize=chunk_size):
-    df_chunk.drop_duplicates(subset=None, keep="first", inplace=True)
-    df_chunk.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1, columns={
-        'Source Port': 'A',
-        'Protocol': 'B',
-        'Destination IP': 'E'
-    })
-    df_chunk.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1, startcol=3, columns={
-        'Source IP': 'D',
-        'Destination IP': 'E'
-    })
+total_rows = sum(1 for _ in pd.read_csv(csv_path, usecols=cols_to_include, chunksize=chunk_size))
+with tqdm(total=total_rows, unit=' rows') as pbar:
+    for df_chunk in pd.read_csv(csv_path, usecols=cols_to_include, chunksize=chunk_size):
+        df_chunk.drop_duplicates(subset=None, keep="first", inplace=True)
+        df_chunk.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1, columns={
+            'Source Port': 'A',
+            'Protocol': 'B',
+            'Destination IP': 'E'
+        })
+        df_chunk.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1, startcol=3, columns={
+            'Source IP': 'D',
+            'Destination IP': 'E'
+        })
+        pbar.update(len(df_chunk))
 writer.close()
+pbar.close()
 
 # Remove the second row from each worksheet because it adds header columns
 wb = openpyxl.load_workbook(ppsm_output)
